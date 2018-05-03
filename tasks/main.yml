@@ -1,0 +1,11 @@
+---
+
+#
+# borg client installation
+#
+- include: borgbackup-install.yml
+
+#
+# borg client installation : nrpe check backup
+#
+- include: nrpe-check-borgbackup.yml

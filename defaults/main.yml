@@ -1,0 +1,10 @@
+---
+
+#
+# borg installation
+#
+borgbackup_config_server_list: []
+borgbackup_config_create_jobs: []
+borgbackup_config_prune_jobs: []
+borgbackup_config_check_jobs: []
+borgbackup_config_server_admins: []

@@ -1,0 +1,43 @@
+---
+
+#
+# install nrpe service
+#
+- include_role:
+    name: services/nrpe
+
+#
+# install nrpe borgbackup plugin
+#
+- include_role:
+    name: tools/nrpe_config
+  vars:
+    nrpe_config_plugins_script:
+      - src: nrpe_check_borgbackup.sh.j2
+        dest: nrpe_check_borgbackup.sh
+    nrpe_config_plugins_script_config:
+      - src: nrpe_check_borgbackup.conf.j2
+        dest: nrpe_check_borgbackup_{{ borgbackup_config_create_jobs[0].name }}.conf
+    nrpe_config_plugins_config:
+      - src: borgbackup.cfg.j2
+        dest: "borgbackup_{{ borgbackup_config_create_jobs[0].name }}.cfg"
+
+#
+# centreon supervision subscription
+#
+- include_role:
+    name: tools/centreon
+  vars:
+    centreon_host_hosttemplates:
+      - App-BorgBackup-System
+  when: borgbackup_config_create_jobs[0].name == "system"
+
+- include_role:
+    name: tools/centreon
+  vars:
+    centreon_host_macros:
+      - name: "BORG_REPO"
+        value: "{{ borgbackup_config_create_jobs[0].name }}"
+    centreon_host_hosttemplates:
+      - App-BorgBackup-Projet
+  when: borgbackup_config_create_jobs[0].name != "system"

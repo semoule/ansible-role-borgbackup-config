@@ -1,0 +1,21 @@
+---
+
+#
+# borg client installation : loop install on borgbackup repository servers criteria
+#
+- include_role:
+    name: semoule.ansible-role-borgbackup
+  with_items: "{{ borgbackup_config_server_list }}"
+  loop_control:
+    loop_var: include_item
+  vars:
+    borgbackup_client: True
+    borgbackup_client_ssh_key_file: "{{ include_item.client_ssh_key_file }}"
+    borgbackup_encryption_mode: "{{ include_item.encryption_mode }}"
+    borgbackup_client_backup_server: "{{ include_item.client_backup_server }}"
+    borgbackup_client_backup_server_lanfreebackup: "{{ include_item.client_backup_server_lanfreebackup | default(include_item.client_backup_server) }}"
+    borgbackup_passphrase: "{{ include_item.passphrase }}"
+    borgbackup_create_jobs: "{{ borgbackup_config_create_jobs }}"
+    borgbackup_prune_jobs: "{{ borgbackup_config_prune_jobs }}"
+    borgbackup_check_jobs: "{{ borgbackup_config_check_jobs }}"
+    borgbackup_server_admins: "{{ borgbackup_config_server_admins }}"
